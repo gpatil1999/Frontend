@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle } from 'reactstrap';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
@@ -15,7 +15,10 @@ function RenderCard({item, isLoading, errMess}) {
             <h4>{errMess}</h4>
         );
     }
-    else
+    else {
+        if (!item){
+            return <div>Loading...</div>;
+        }
         return(
             <FadeTransform in 
                 transformProps={{
@@ -31,9 +34,11 @@ function RenderCard({item, isLoading, errMess}) {
                 </Card>
             </FadeTransform>
         );
+            }
 }
 
 function Home(props) {
+
     return(
         <div className="container">
             <div className="row align-items-start">
