@@ -279,6 +279,32 @@ export const loginUser = (creds) => (dispatch) => {
     .catch(error => dispatch(loginError(error.message)))
 };
 
+export const signUpUser = (creds) => (dispatch) => {
+    // We dispatch requestLogin to kickoff the call to the API
+    // dispatch(requestSignUp(creds))
+    console.log(creds);
+    return fetch(baseUrl + 'users/signup', {
+        method: 'POST',
+        headers: { 
+            'Content-Type':'application/json' 
+        },
+        body: JSON.stringify(creds)
+    })
+    .then(response => {
+        if (response.ok) {
+            return response;
+        } else {
+            var error = new Error('Error ' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+        }
+        },
+        error => {
+            throw error;
+        })
+    .catch(error => dispatch(loginError(error.message)))
+};
+
 export const requestLogout = () => {
     return {
       type: ActionTypes.LOGOUT_REQUEST
