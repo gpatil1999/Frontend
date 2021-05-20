@@ -10,12 +10,16 @@ class Header extends Component {
         super(props);
         this.state = {
             isNavOpen: false,
-            isModalOpen: false
+            isModalOpen: false,
+            isModalSignUpOpen: false
         };
         this.toggleNav = this.toggleNav.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
+        this.toggleModalSignUp = this.toggleModalSignUp.bind(this);
+        this.handleSignUp = this.handleSignUp.bind(this);
+
     }
 
     toggleNav() {
@@ -30,11 +34,25 @@ class Header extends Component {
         });
     }
 
+    toggleModalSignUp() {
+        this.setState({
+            isModalSignUpOpen: !this.state.isModalSignUpOpen
+        });
+    }
+
     handleLogin(event) {
         this.toggleModal();
         this.props.loginUser({username: this.username.value, password: this.password.value});
         event.preventDefault();
 
+    }
+
+    handleSignUp(event) {
+        this.toggleModalSignUp();
+        this.props.signUpUser({username: this.username.value, password: this.password.value});
+        this.toggleModal();
+        event.preventDefault();
+        
     }
 
     handleLogout() {
@@ -82,6 +100,7 @@ class Header extends Component {
                             <Nav className="ml-auto" navbar>
                                 <NavItem>
                                     { !this.props.auth.isAuthenticated ?
+                                    <div>
                                         <Button outline onClick={this.toggleModal}>
                                             <span className="fa fa-sign-in fa-lg"></span> Login
                                             {this.props.auth.isFetching ?
@@ -89,6 +108,14 @@ class Header extends Component {
                                                 : null
                                             }
                                         </Button>
+                                        <Button outline onClick={this.toggleModalSignUp}>
+                                            <span className="fa fa-sign-in fa-lg"></span> SignUp
+                                            {this.props.auth.isFetching ?
+                                                <span className="fa fa-spinner fa-pulse fa-fw"></span>
+                                                : null
+                                            }
+                                        </Button>
+                                        </div>
                                         :
                                         <div>
                                         <div className="navbar-text mr-3">{this.props.auth.user.username}</div>
@@ -139,6 +166,31 @@ class Header extends Component {
                                 </Label>
                             </FormGroup>
                             <Button type="submit" value="submit" color="primary">Login</Button>
+                        </Form>
+                    </ModalBody>
+                </Modal>
+                <Modal isOpen={this.state.isModalSignUpOpen} toggle={this.toggleModalSignUp}>
+                    <ModalHeader toggle={this.toggleModalSignUp}>SignUp</ModalHeader>
+                    <ModalBody>
+                        <Form onSubmit={this.handleSignUp}>
+                            <FormGroup>
+                                <Label htmlFor="username">Username</Label>
+                                <Input type="text" id="username" name="username"
+                                    innerRef={(input) => this.username = input} />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="password">Password</Label>
+                                <Input type="password" id="password" name="password"
+                                    innerRef={(input) => this.password = input}  />
+                            </FormGroup>
+                            <FormGroup check>
+                                <Label check>
+                                    <Input type="checkbox" name="remember"
+                                    innerRef={(input) => this.remember = input}  />
+                                    Remember me
+                                </Label>
+                            </FormGroup>
+                            <Button type="submit" value="submit" color="primary">SignUp</Button>
                         </Form>
                     </ModalBody>
                 </Modal>

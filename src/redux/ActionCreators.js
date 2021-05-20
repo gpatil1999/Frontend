@@ -67,6 +67,7 @@ export const fetchDishes = () => (dispatch) => {
         .then(response => response.json())
         .then(dishes => dispatch(addDishes(dishes)))
         .catch(error => dispatch(dishesFailed(error.message)));
+        
 }
 
 export const dishesLoading = () => ({
@@ -275,6 +276,32 @@ export const loginUser = (creds) => (dispatch) => {
             throw error;
         }
     })
+    .catch(error => dispatch(loginError(error.message)))
+};
+
+export const signUpUser = (creds) => (dispatch) => {
+    // We dispatch requestLogin to kickoff the call to the API
+    // dispatch(requestSignUp(creds))
+    console.log(creds);
+    return fetch(baseUrl + 'users/signup', {
+        method: 'POST',
+        headers: { 
+            'Content-Type':'application/json' 
+        },
+        body: JSON.stringify(creds)
+    })
+    .then(response => {
+        if (response.ok) {
+            return response;
+        } else {
+            var error = new Error('Error ' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+        }
+        },
+        error => {
+            throw error;
+        })
     .catch(error => dispatch(loginError(error.message)))
 };
 
